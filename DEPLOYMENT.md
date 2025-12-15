@@ -1,13 +1,22 @@
 # Deployment Guide
 
-This project consists of a React frontend and Express backend that need to be deployed separately.
+This project consists of separate frontend and backend folders that need to be deployed to different platforms.
+
+## Project Structure
+
+```
+port/
+├── frontend/          # React app (deploy to Vercel)
+├── backend/           # Express API (deploy to Render)
+└── DEPLOYMENT.md      # This file
+```
 
 ## Backend Deployment (Render)
 
 1. **Push your code to GitHub:**
    ```bash
    git add .
-   git commit -m "Setup for Render and Vercel deployment"
+   git commit -m "Separate frontend and backend for deployment"
    git push origin main
    ```
 
@@ -16,8 +25,9 @@ This project consists of a React frontend and Express backend that need to be de
    - Click "New" → "Web Service"
    - Connect your GitHub repository
    - Configure:
+     - **Root Directory:** `backend`
      - **Build Command:** `npm install`
-     - **Start Command:** `npm run server`
+     - **Start Command:** `npm start`
      - **Environment:** Node
 
 3. **Set Environment Variables on Render:**
@@ -33,28 +43,40 @@ This project consists of a React frontend and Express backend that need to be de
 
 ## Frontend Deployment (Vercel)
 
-1. **Update your .env file:**
-   ```
-   VITE_API_BASE_URL=https://your-render-app.onrender.com
-   ```
-
-2. **Deploy to Vercel:**
+1. **Deploy to Vercel:**
    - Go to [vercel.com](https://vercel.com)
    - Click "New Project"
    - Import your GitHub repository
-   - Vercel will automatically detect it's a Vite project
+   - Configure:
+     - **Root Directory:** `frontend`
+     - **Framework Preset:** Vite
    - Set Environment Variables:
      ```
      VITE_API_BASE_URL=https://your-render-app.onrender.com
      ```
 
-3. **Update CORS after deployment:**
+2. **Update CORS after deployment:**
    - After Vercel gives you a domain, update the `ALLOWED_ORIGIN` on Render to your Vercel URL
-   - Update your local `.env` file with the correct URLs
+
+## Local Development
+
+### Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ## Important Notes
 
-- The backend will be available at: `https://your-app.onrender.com`
-- The frontend will be available at: `https://your-app.vercel.app`
+- Backend will be available at: `https://your-app.onrender.com`
+- Frontend will be available at: `https://your-app.vercel.app`
 - Make sure to update CORS origins after getting the final URLs
-- Render may take a few minutes to start up on the first request (free tier)
+- Each folder has its own package.json and dependencies
