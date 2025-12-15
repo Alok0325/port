@@ -108,9 +108,8 @@ const Achievements = () => {
                       />
                       {/* Solid circle */}
                       <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/80 flex items-center justify-center shadow-lg shadow-accent-blue/20">
-                        <Icon
-                          className={`text-4xl bg-gradient-to-r ${achievement.color} bg-clip-text text-transparent`}
-                        />
+                        {/* Make the icon clearly visible instead of transparent gradient */}
+                        <Icon className="text-4xl text-white" />
                       </div>
                     </div>
                   </motion.div>
