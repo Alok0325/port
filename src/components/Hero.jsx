@@ -182,7 +182,7 @@ const Hero = () => {
               {/* Profile image container */}
               <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-gray-800 shadow-2xl">
                 <img
-                  src="/Images/PFP.jpg"
+                  src="/PFP.jpg"
                   alt="Alok Prajapati"
                   className="w-full h-full object-cover"
                   onError={(e) => {
