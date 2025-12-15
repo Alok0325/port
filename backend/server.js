@@ -7,20 +7,19 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 5000
 
-/* ========= CORS (FINAL, SIMPLE) ========= */
+/* ========= CORS (SIMPLE & SAFE) ========= */
 app.use((req, res, next) => {
   const origin = req.headers.origin
 
-  const allowedOrigins = process.env.ALLOWED_ORIGIN
-    ? process.env.ALLOWED_ORIGIN.split(',').map(o => o.trim())
-    : ['http://localhost:5173']
-
-  if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+  // header tabhi set hoga jab origin exist kare
+  if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin)
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   }
 
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  // preflight request
   if (req.method === 'OPTIONS') {
     return res.sendStatus(204)
   }
@@ -31,7 +30,7 @@ app.use((req, res, next) => {
 /* ========= MIDDLEWARE ========= */
 app.use(express.json())
 
-/* ========= MAIL SETUP ========= */
+/* ========= MAILER ========= */
 const mailer = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
@@ -48,7 +47,7 @@ app.get('/api/health', (req, res) => {
 })
 
 app.post('/api/contact', async (req, res) => {
-  const { name, email, message } = req.body
+  const { name, email, message } = req.body || {}
 
   if (!name || !email || !message) {
     return res.status(400).json({ ok: false, error: 'All fields required' })
@@ -63,9 +62,10 @@ app.post('/api/contact', async (req, res) => {
       text: message,
     })
 
-    res.json({ ok: true })
+    return res.json({ ok: true })
   } catch (err) {
-    res.status(500).json({ ok: false, error: 'Mail failed' })
+    console.error(err)
+    return res.status(500).json({ ok: false })
   }
 })
 
